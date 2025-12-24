@@ -23,13 +23,13 @@
 
   <div *ngIf="data" class="results">
     <!-- Profile Information Section -->
-    <section class="section">
+    <section class="section" *ngIf="data.profile_info">
       <h2>Profile Information</h2>
       <div class="profile-info">
         <div class="profile-header">
           <div class="profile-image-container">
             <img 
-                [src]="getProfileImage(data.prfil_info?.profile_pic_url)" 
+              src="https://instagram.ftun15-1.fna.fbcdn.net/v/t51.2885-19/290490306_5546497298717243_3340762957370409520_n.jpg?stp=dst-jpg_s150x150_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby4xMDgwLmMyIn0&_nc_ht=instagram.ftun15-1.fna.fbcdn.net&_nc_cat=111&_nc_oc=Q6cZ2QEKyIK9RQWWJrayQGmy-xDV7KzoHuUS0UmhrKz72dEjiN67usuVRcpzuibu8cw_njg&_nc_ohc=qsY0Xbht-44Q7kNvwEOfmvt&_nc_gid=odetniMtdg0xH6U2U6v3Ow&edm=AONqaaQBAAAA&ccb=7-5&oh=00_AfmlLsy4TFXEf8wplFTg46A_NSPzRLPCoyfVUmSPgS9JsQ&oe=6951E7A4&_nc_sid=4e3341"
 
               alt="Profile Picture" 
               class="profile-image"

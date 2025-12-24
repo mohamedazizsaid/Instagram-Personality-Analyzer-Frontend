@@ -27,7 +27,6 @@ export class AppComponent  implements OnInit {
       (res) => {
         console.log(res);
         this.data = res;
-        console.log(this.data.profile_info.profile_pic_url)
         this.loading = false;
       },
       (err) => {

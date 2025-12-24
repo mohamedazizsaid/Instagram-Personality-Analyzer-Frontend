@@ -1,0 +1,131 @@
+<div class="container" >
+  <h1 class="title">Instagram Personality Analyzer</h1>
+  
+  <form (submit)="onSubmit()" class="form">
+    <div class="input-group">
+      <input 
+        type="text" 
+        [(ngModel)]="instagramUrl" 
+        placeholder="Enter Instagram Profile URL (e.g., https://www.instagram.com/username)" 
+        class="input" 
+        required
+      />
+      <button type="submit" class="button" [disabled]="loading">Analyze</button>
+    </div>
+  </form>
+
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Analyzing profile... This may take a moment while data is scraped and images are downloaded.</p>
+  </div>
+
+  <div *ngIf="data" class="results">
+    <!-- Profile Information Section -->
+    <section class="section">
+      <h2>Profile Information</h2>
+      <div class="profile-info">
+        <div class="profile-header">
+          <div class="profile-image-container">
+            <img 
+                [src]="getProfileImage(data.prfil_info?.profile_pic_url)" 
+
+              alt="Profile Picture" 
+              class="profile-image"
+            />
+          </div>
+          <div class="profile-details">
+            <h3 class="profile-username">{{ data.profile_info.username || 'N/A' }}</h3>
+            <p class="profile-fullname">{{ data.profile_info.full_name || 'No full name provided' }}</p>
+            <div class="profile-stats">
+              <div class="stat-item">
+                <span class="stat-number">{{ data.profile_info.followers || '0' }}</span>
+                <span class="stat-label">Followers</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-number">{{ data.profile_info.following || '0' }}</span>
+                <span class="stat-label">Following</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-number">{{ data.profile_info.posts_count || '0' }}</span>
+                <span class="stat-label">Posts</span>
+              </div>
+            </div>
+            <div class="profile-bio">
+              <p>{{ data.profile_info.biography || 'No biography available' }}</p>
+            </div>
+            <div class="profile-links" *ngIf="data">
+              <a [href]="'https://www.instagram.com/'+data.profile_info.username" target="_blank" class="external-link">
+                🌐 {{ data.profile_info.username }}
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-extra" *ngIf="data.profile_info.is_private !== undefined || data.profile_info.is_verified !== undefined">
+          <div class="badge-container">
+            <span class="badge" [class.private]="data.profile_info.is_private" *ngIf="data.profile_info.is_private !== undefined">
+              {{ data.profile_info.is_private ? '🔒 Private Account' : '🌐 Public Account' }}
+            </span>
+            <span class="badge verified" *ngIf="data.profile_info.is_verified">
+              ✅ Verified
+            </span>
+            <span class="badge business" *ngIf="data.profile_info.is_business_account">
+              💼 Business Account
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Personality Traits Section -->
+    <section class="section">
+      <h2>Personality Traits</h2>
+      <div class="traits-grid">
+        <div *ngFor="let trait of getTraits()" class="trait-card">
+          <div class="trait-name">{{ trait.name }}</div>
+          <div class="trait-bar">
+            <div class="trait-fill" [style.width.%]="trait.value * 100"></div>
+          </div>
+          <div class="trait-value">{{ (trait.value * 100).toFixed(1) }}%</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Analysis Summary Section -->
+    <section class="section" style="color: white;">
+      <h2>Analysis Summary</h2>
+      <div style="display: flex; justify-content: space-around;">
+        <div style="margin-top: 50px; color: black;">
+          <p>Posts Analyzed: {{ data.posts_analyzed }}</p>
+          <h3>Visualization</h3>
+        </div>
+        <div *ngIf="data.visualization">
+          <img [src]="data.visualization" alt="Personality Visualization" class="visualization-image" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Sample Posts Section -->
+    <section class="section">
+      <h2>Sample Posts</h2>
+      <div class="posts-grid">
+        <div *ngFor="let post of data.sample_data" class="post-card">
+          <div *ngIf="post.image_path" class="post-image">
+            <img [src]="'http://localhost:8000/downloads/' + post.image_path + '.jpg'" alt="Post Image" />
+          </div>
+          <div *ngIf="post.is_video && !post.image_path" class="post-video-placeholder">
+            <p>Video Post (No thumbnail available)</p>
+          </div>
+          <div class="post-content">
+            <p class="post-caption">{{ post.caption || 'No caption' }}</p>
+            <p class="post-stats">Likes: {{ post.likes }} | Comments: {{ post.comments_count }}</p>
+            <p class="post-date">Date: {{ post.date }}</p>
+            <a [href]="post.url" target="_blank" class="post-link">View on Instagram</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

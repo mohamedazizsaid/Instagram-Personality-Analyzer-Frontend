@@ -56,7 +56,6 @@ export class AppComponent  implements OnInit {
   }
 
   extractLinkFromBio(bio: string): string {
-    // Logique pour extraire le lien de la biographie
     const urlRegex = /(https?:\/\/[^\s]+)/g;
     const match = bio.match(urlRegex);
     return match ? match[0] : '#';
